@@ -1,5 +1,5 @@
 const { Firestore } = require('@google-cloud/firestore');
-const serviceAccount = require('../../firebase-service-account.json');
+const serviceAccount = require('../../../firebase-service-account.json');
 
 const SERVICE_PATH = process.env.FIREBASE_SERVICE_PATH || '[ZONE]-firestore.googleapis.com';
 const DATABASE_ID  = process.env.FIREBASE_DB_ID || 'fallback-value-database';
