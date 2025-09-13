@@ -60,15 +60,17 @@ async function listAllProducts(_req, res) {
 
 // 
 async function getProduct(req, res) {
+  const { id } = req.params; // "E5tO2aziTqgz72iUeCMI"
   try {
-    const ref = db.collection('products').doc(req.params.id);
-    const doc = await ref.get();
-    if (!doc.exists) return res.status(404).json({ error: 'No encontrado' });
-    return res.json({ id: doc.id, ...doc.data() });
+    const snap = await db.collection("products").doc(id).get();
+    if (!snap.exists) return res.status(404).json({ error: "Product not found" });
+    return res.json({ id: snap.id, ...snap.data() });
   } catch (e) {
-    return httpError(res, e);
+    console.error("get product error", e);
+    return res.status(500).json({ error: "Internal error" });
   }
 }
+
 
 // POST /api/products (merchant o admin)
 async function createProduct(req, res) {
