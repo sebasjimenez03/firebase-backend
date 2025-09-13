@@ -41,6 +41,7 @@ db.listCollections()
 // Rutas
 app.get('/health', (_req, res) => res.json({ ok: true }));
 app.use('/api/products', productsRoutes);
+app.use('/api/products/:id', productsRoutes);
 app.use('/api/shops', shopsRoutes);
 app.use('/api/collaborators', collaboratorsRoutes);
 
