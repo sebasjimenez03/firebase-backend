@@ -7,10 +7,18 @@ const cors = require('cors');
 const app = express();
 
 //CORS
+const allowed = [
+  /^http:\/\/localhost:3000$/,
+  /\.vercel\.app$/,
+  /\.cloudworkstations\.dev$/
+];
+
 app.use(cors({
-  origin: [
-     process.env.FRONTEND_URL
-],
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true); // Postman/SSR
+    const ok = allowed.some(re => re.test(origin));
+    return ok ? cb(null, true) : cb(new Error("CORS not allowed"));
+  },
   credentials: true
 }));
 
@@ -20,6 +28,7 @@ const { db } = require('./config/firestore');
 //Routes
 const productsRoutes = require('./routes/products.routes');
 const shopsRoutes = require('./routes/shops.routes');
+const collaboratorsRoutes = require('./routes/collaborators.routes');
 const { notFound, onError } = require('./middlewares/error'); // Error reporting
 
 db.listCollections()
@@ -33,6 +42,7 @@ db.listCollections()
 app.get('/health', (_req, res) => res.json({ ok: true }));
 app.use('/api/products', productsRoutes);
 app.use('/api/shops', shopsRoutes);
+app.use('/api/collaborators', collaboratorsRoutes);
 
 app.use(notFound);
 app.use(onError);
